@@ -1,8 +1,0 @@
-[deploy]
-numReplicas = 1
-
-[build]
-builder = "NIXPACKS"
-
-[variables]
-NODE_ENV = "production"

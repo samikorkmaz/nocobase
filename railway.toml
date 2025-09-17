@@ -1,0 +1,18 @@
+[deploy]
+numReplicas = 1
+startCommand = "docker-compose up -d"
+
+[build]
+builder = "DOCKERFILE"
+
+[[services]]
+name = "n8n"
+port = 5678
+
+[[services]]
+name = "nocobase"
+port = 13000
+
+[[services]]
+name = "adminer"
+port = 8080
