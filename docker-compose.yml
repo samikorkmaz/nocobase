@@ -7,18 +7,13 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-n8n_db}
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER: ${POSTGRES_USER:-n8n_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-n8n_user}"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   # n8n workflow automation
   n8n:
@@ -31,16 +26,15 @@ services:
       DB_POSTGRESDB_DATABASE: ${POSTGRES_DB:-n8n_db}
       DB_POSTGRESDB_HOST: postgres
       DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_USER: ${POSTGRES_USER:-user}
-      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-n8n_user}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
       N8N_HOST: ${N8N_HOST:-0.0.0.0}
       N8N_PORT: ${N8N_PORT:-5678}
       N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
       NODE_ENV: production
       GENERIC_TIMEZONE: ${TZ:-UTC}
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
@@ -57,13 +51,12 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_DATABASE: ${NOCABASE_DB:-nocobase_db}
-      DB_USER: ${POSTGRES_USER:-user}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      DB_USER: ${POSTGRES_USER:-n8n_user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       APP_PORT: 13000
       APP_ENV: production
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     volumes:
       - nocobase_storage:/app/storage
     networks:
@@ -77,7 +70,6 @@ services:
       - "8080:8080"
     environment:
       ADMINER_DEFAULT_SERVER: postgres
-      ADMINER_DEFAULT_DATABASE: ${POSTGRES_DB:-n8n_db}
     depends_on:
       - postgres
     networks:
@@ -85,11 +77,8 @@ services:
 
 volumes:
   postgres_data:
-    driver: local
   n8n_data:
-    driver: local
   nocobase_storage:
-    driver: local
 
 networks:
   app-network:
