@@ -1,0 +1,15 @@
+# PostgreSQL Configuration
+POSTGRES_DB=n8n_db
+POSTGRES_USER=n8n_user
+POSTGRES_PASSWORD=your_secure_password_here
+
+# Nocobase Database
+NOCABASE_DB=nocobase_db
+
+# n8n Configuration
+N8N_HOST=0.0.0.0
+N8N_PORT=5678
+N8N_PROTOCOL=http
+
+# Timezone
+TZ=UTC
